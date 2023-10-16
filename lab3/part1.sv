@@ -1,3 +1,5 @@
+//THIS IS THE FINAL VERSION THAT CAN BE SUBMITTED. IF YOU DON'T SEE THIS, YOU'RE ON THE WRONG VERSION BROTHER
+
 module FA(input logic a, b, input logic c_in, output logic s, c_out);
     assign c_out = a&b | b&c_in | a&c_in;
     assign s = a ^ b ^ c_in;
