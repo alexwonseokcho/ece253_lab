@@ -5,10 +5,10 @@ module part3 # (parameter N = 4)
     begin
         case(Function):
             2'b00: ALUout = A + B; //can 2'b00 just be replaced with a 0? 
-            2'b01: ALUout = {(N-1){1'b0}, |{A, B}};
-            2'b10: ALUout = {(N-1){1'b0}, &{A, B}};;
+            2'b01: ALUout = {(N-1)'b0, |{A, B}};
+            2'b10: ALUout = {(N-1)'b0, &{A, B}};;
             2'b11: ALUout = {A, B};
-            default: ALUout = {N{1'b0}};
+            default: ALUout = N'b0;
         endcase
     end
 endmodule
