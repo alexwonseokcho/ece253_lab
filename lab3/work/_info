@@ -1,0 +1,80 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/togar/Verilog/ECE253/Labs/ece253_lab/lab3
+vFA
+Z1 DXx6 sv_std 3 std 0 22 AD7iAPLo6nTIKk<N0eo=D3
+Z2 !s110 1697486669
+!i10b 1
+!s100 07^1MTVKlI?om9@X2j4IN3
+Id0J6D>a8cOJg0hFE[B;z13
+Z3 VDg1SIo80bB@j0V0VzS_@n1
+Z4 !s105 part1_sv_unit
+S1
+R0
+Z5 w1697484661
+Z6 8part1.sv
+Z7 Fpart1.sv
+L0 1
+Z8 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z9 !s108 1697486669.000000
+Z10 !s107 part1.sv|part2.sv|
+Z11 !s90 -reportprogress|300|part2.sv|part1.sv|
+!i113 1
+Z12 tCvgOpt 0
+n@f@a
+vpart1
+R1
+R2
+!i10b 1
+!s100 9YSV>65>iPaY;fU[z:Znk0
+Iom5]n>ZhfkL:9[XFl=K<:2
+R3
+R4
+S1
+R0
+R5
+R6
+R7
+L0 6
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 1
+R12
+vpart2
+R1
+R2
+!i10b 1
+!s100 ETGEfQ?0@ZKFZW6SRQzRO3
+I_@JWaA=DXhoKKDE_S;>Vf3
+R3
+!s105 part2_sv_unit
+S1
+R0
+w1697486630
+8part2.sv
+Fpart2.sv
+L0 1
+R8
+r1
+!s85 0
+31
+R9
+R10
+R11
+!i113 1
+R12
