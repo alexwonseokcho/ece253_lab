@@ -1,0 +1,6 @@
+run tester with: /cad2/ece253f/public/<lab#>/tester
+in the same folder as the files
+
+submit with /cad2/ece253f/public/submit <file1.sv> <file2.sv> ... 
+
+check submission with /cad2/ece253f/public/check_submission <lab#>
