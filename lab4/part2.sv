@@ -1,5 +1,6 @@
 module part2(input logic Clock, Reset_b, input logic[3:0] Data, input logic [1:0] Function, output logic [7:0] ALUout);
     logic [7:0] c1;
+    register8bit u1(Clock, Reset_b, c1, ALUout);
     assign ALUout = 8'b0;
     always_comb
     begin
@@ -11,7 +12,7 @@ module part2(input logic Clock, Reset_b, input logic[3:0] Data, input logic [1:0
             default: c1 = 8'b0;
         endcase
     end
-    register8bit u1(Clock, Reset_b, c1, ALUout);
+
 endmodule
 
 module register8bit(input logic clk, Reset_b, input logic [7:0] DataIn, output logic [7:0] DataOut);
