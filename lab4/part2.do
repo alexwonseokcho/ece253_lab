@@ -135,4 +135,12 @@ force {Function} 11
 
 run 20ns
 
+force {Reset_b} 1
+
+force {Data} 0111
+force {Function} 11
+
+run 20ns
+
+
 
