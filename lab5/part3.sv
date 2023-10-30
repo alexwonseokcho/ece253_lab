@@ -10,6 +10,24 @@ module part3 #(parameter CLOCK_FREQUENCY=500) (input logic ClockIn, Reset, Start
 endmodule
 
 
+module RateDivider #(parameter CLOCK_FREQUENCY = 500) (input logic ClockIn, Reset, output logic Enable);
+
+    logic [$clog2(CLOCK_FREQUENCY * 4 + 1): 0] countStart;
+    logic [$clog2(CLOCK_FREQUENCY * 4 + 1): 0] RateDividerCount;
+
+    countStart = (CLOCK_FREQUENCY / 2) - 1;
+
+    assign Enable = (RateDividerCount == 'b0) ? 'b1 : 'b0;
+
+    always_ff @(posedge ClockIn)
+    begin
+        if (Reset || Enable)
+            RateDividerCount <= countStart;
+        else
+            RateDividerCount <= RateDividerCount - 1;  
+    end
+
+endmodule
 
 module mux3to12_morse(input [2:0] sel, output [11:0] out);
     always_comb

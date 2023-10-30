@@ -1,22 +1,10 @@
-module part2 #(parameter CLOCK_FREQUENCY = 500) (input logic ClockIn, input logc Reset, input logic [1:0] Speed, output logic [3:0] CounterValue);
+module part2 #(parameter CLOCK_FREQUENCY = 500) (input logic ClockIn, input logic Reset, input logic [1:0] Speed, output logic [3:0] CounterValue);
     
     logic EnableDC;
     RateDivider #(CLOCK_FREQUENCY) rate1 (ClockIn, Reset, Speed, EnableDC);
 
     DisplayCounter dc (ClockIn, Reset, EnableDC, CounterValue);
 
-endmodule
-
-// endmodule
-//feed the reduced clock to this module & 
-module counter8bit(input logic clk, reset, enable, output logic [7:0] DataOut);
-    always_ff @(posedge clk)
-    begin
-        if (reset)
-            DataOut <= 8'b0;
-        else if (enable)
-            DataOut <= DataOut + 1;
-    end
 endmodule
 
 module RateDivider #(parameter CLOCK_FREQUENCY = 500) (input logic ClockIn, Reset, [1:0] Speed, output logic Enable);
