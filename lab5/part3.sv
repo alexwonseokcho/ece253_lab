@@ -1,7 +1,10 @@
-module part3(input logic ClockIn, Reset, Start, input logic [2:0] Letter, output logic DotDashOut, NewBitOut);
-    
+module part3 #(parameter CLOCK_FREQUENCY=500) (input logic ClockIn, Reset, Start, input logic [2:0] Letter, output logic DotDashOut, NewBitOut);
+    logic leftbit;
+    logic [11:0] shift_reg_out;
     mux3to12_morse mux(.sel(Letter), .out(letter_morse));
-    shift_reg shift(.clock(ClockIn), .reset(Reset), .ParallelLoadn(1), .RotateRight(1'b1), .ASRight(1'b0), .Data_IN(letter_morse), .Q(shift_reg_out), .leftbit(leftbit));
+    shift_reg shift(.clock(ClockIn), .reset(Reset), .ParallelLoadn(0), .RotateRight(1'b1), .ASRight(1'b0), .Data_IN(letter_morse), .Q(shift_reg_out), .leftbit(leftbit));
+    
+
 
 
 endmodule
