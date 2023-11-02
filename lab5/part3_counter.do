@@ -17,19 +17,35 @@ add wave {/*}
 #r(input logic ClockIn, Reset, Start, output logic [2:0] CounterOut, output logic NewBitOut);
 
 force {ClockIn} 0, 1 {1 ms} -r {2 ms}
-force {Enable} 0
+# force {Enable} 0
 
 force {Reset} 1
 run 3 ms
 force {Reset} 0
+# run 50ms 
 
-run 500ms 
 force {Start} 1
 run 2 ms
 force {Start} 0
 
-force {Enable} 1, 0 {2 ms} -r {500 ms}
+force {Enable} 1, 0 {2 ms} -r {4 ms}
 
-run 10000 ms
+run 50 ms
+
+force {Start} 1
+run 2 ms
+force {Start} 0
+
+force {Enable} 1
+run 2 ms
+force {Enable} 1
+run 2 ms
+force {Enable} 1
+run 2 ms
+force {Enable} 1
+run 2 ms
+force {Enable} 1
+run 2 ms
+
 
 
