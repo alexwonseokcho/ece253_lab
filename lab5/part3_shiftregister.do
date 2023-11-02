@@ -6,7 +6,7 @@ vlib work
 vlog part3.sv
 
 #load simulation using mux as the top level simulation module
-vsim counter
+vsim shiftregister12bit
 
 #log all signals and add some signals to waveform window
 log {/*}
@@ -17,40 +17,29 @@ add wave {/*}
 #r(input logic ClockIn, Reset, Start, output logic [2:0] CounterOut, output logic NewBitOut);
 
 force {ClockIn} 0, 1 {1 ms} -r {2 ms}
-# force {Enable} 0
-
-force {Reset} 1
-run 3 ms
-force {Reset} 0
-# run 50ms 
-
-force {Start} 1
-run 2 ms
-force {Start} 0
-
-force {Enable} 1, 0 {2 ms} -r {4 ms}
-
-run 50 ms
-
-force {Start} 1
-run 2 ms
-force {Start} 0
-
-force {Enable} 1, 0 {2 ms} -r {500 ms}
-
-run 5000ms
+force {Shift} 0
 
 force {Reset} 1
 run 3 ms
 force {Reset} 0
 
+force {ParallelLoadn} 110010001101 
 
-run 1000 ms
-
-
-run 500ms 
-force {Start} 1
+run 10 ms
+force {ParallelLoad} 1
 run 2 ms
-force {Start} 0
+force {ParallelLoad} 0
+
+run 10 ms
+
+force {ParallelLoadn} 111110001101 
+
+
+force {Shift} 1, 0 {2 ms} -r {500 ms}
+
+run 3000ms 
+force {Reset} 1
+run 3 ms
+force {Reset} 0
 
 run 10000 ms

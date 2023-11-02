@@ -1,55 +1,34 @@
 module part3 #(parameter CLOCK_FREQUENCY=500) (input logic ClockIn, Reset, Start, input logic [2:0] Letter, output logic DotDashOut, NewBitOut);
-    // logic leftbit;
-    // logic [11:0] shift_reg_out;
-    // logic [7:0] count_value;
-    // logic [7:0] count_value_start;
-    // mux3to12_morse mux(.sel(Letter), .out(letter_morse));
-    // shift_reg shift(.clock(ClockIn), .reset(Reset), .ParallelLoadn(0), .RotateRight(1'b1), .ASRight(1'b0), .Data_IN(letter_morse), .Q(shift_reg_out), .leftbit(leftbit));
-    // counter count_start(.Clock(ClockIn), .Enable(start), .Reset(Reset), .CounterValue(count_value_start));
+    // // logic leftbit;
+    // // logic [11:0] shift_reg_out;
+    // // logic [7:0] count_value;
+    // // logic [7:0] count_value_start;
+    // // mux3to12_morse mux(.sel(Letter), .out(letter_morse));
+    // // shift_reg shift(.clock(ClockIn), .reset(Reset), .ParallelLoadn(0), .RotateRight(1'b1), .ASRight(1'b0), .Data_IN(letter_morse), .Q(shift_reg_out), .leftbit(leftbit));
+    // // counter count_start(.Clock(ClockIn), .Enable(start), .Reset(Reset), .CounterValue(count_value_start));
     
-    // counter count(.Clock(ClockIn), .Enable(shift_reg_out[11]), .Reset(Reset), .CounterValue(count_value));
+    // // counter count(.Clock(ClockIn), .Enable(shift_reg_out[11]), .Reset(Reset), .CounterValue(count_value));
 
-    mux3to12_morse mux(.sel(Letter), .out(letter_morse));
-    RateDivider rd(.ClockIn(0.5), .Reset(Reset), .Enable(start));
-    counter(.Clock(start), .Enable(rd.Enable), .Reset(Reset), .CounterValue(count_value));
-    // shift_reg shift(.clock(ClockIn), .reset(Reset), .ParallelLoadn(0), .RotateRight(1'b1), .ASRight(1'b0), .Data_IN(letter_morse), .Q(shift_reg_out), .leftbit(leftbit));
+    // mux3to12_morse mux(.sel(Letter), .out(letter_morse));
+    // RateDivider #(CLOCK_FREQUENCY) rd(.ClockIn(0.5), .Reset(Reset), .Enable(start));
+    // counter(.Clock(start), .Enable(rd.Enable), .Reset(Reset), .CounterValue(count_value));
+    // // shift_reg shift(.clock(ClockIn), .reset(Reset), .ParallelLoadn(0), .RotateRight(1'b1), .ASRight(1'b0), .Data_IN(letter_morse), .Q(shift_reg_out), .leftbit(leftbit));
 
-endmodule
+    logic [11:0] letter_morse;
 
-module counter (input logic Clock, input logic Enable, input logic Reset, output logic [7:0] CounterValue);
-    logic [6:0] c;
-    assign c[0] = CounterValue[0] & Enable;
-    genvar i;
-    generate
-        for(i = 1; i < 7; i++) begin
-            assign c[i] = CounterValue[i] & c[i - 1];
-        end
-    endgenerate
+    mux12bit8to1 mux0(.sel(Letter), .out(letter_morse));
 
-    T_FlipFlop u0(.T(Enable), .clk(Clock), .reset(Reset), .Q(CounterValue[0]));
-    T_FlipFlop u1(.T(c[0]), .clk(Clock), .reset(Reset), .Q(CounterValue[1]));
-    T_FlipFlop u2(.T(c[1]), .clk(Clock), .reset(Reset), .Q(CounterValue[2]));
-    T_FlipFlop u3(.T(c[2]), .clk(Clock), .reset(Reset), .Q(CounterValue[3]));
-    T_FlipFlop u4(.T(c[3]), .clk(Clock), .reset(Reset), .Q(CounterValue[4]));
-    T_FlipFlop u5(.T(c[4]), .clk(Clock), .reset(Reset), .Q(CounterValue[5]));
-    T_FlipFlop u6(.T(c[5]), .clk(Clock), .reset(Reset), .Q(CounterValue[6]));
-    T_FlipFlop u7(.T(c[6]), .clk(Clock), .reset(Reset), .Q(CounterValue[7]));
+    logic halfSecondPulse;
+    RateDivider #(CLOCK_FREQUENCY) rd(.ClockIn(ClockIn), .Reset(Reset), .Enable(halfSecondPulse));
+    
+    counter count0(.ClockIn(ClockIn), .Enable(halfSecondPulse), .Reset(Reset), .Start(Start),  .NewBitOut(NewBitOut)); //.CounterOut(0),
 
+    logic [11:0] shift_reg_out;
+    shiftregister12bit shift0(.Reset(Reset), .Shift(NewBitOut), .ParallelLoad(Start), .ClockIn(ClockIn), .ParallelLoadn(letter_morse), .Q(shift_reg_out));
+    assign DotDashOut = shift_reg_out[11];
 
 endmodule
 
-module T_FlipFlop(input logic T, input logic clk, input logic reset, output logic Q);
-    logic c1;
-    assign c1 = T ^ Q; 
-
-    always_ff @(posedge clk)
-    begin
-        if(reset)
-            Q <= 1'b0;
-        else
-            Q <= c1;
-    end
-endmodule
 
 
 
@@ -87,6 +66,34 @@ module counter(input logic ClockIn, Enable, Reset, Start, output logic [3:0] Cou
     // assign CounterOut = CounterCount;
     assign NewBitOut = ~(CounterOut == 'b0) & Enable & ~(CounterOut == 12);
 endmodule 
+
+module shiftregister12bit(input logic Reset, Shift, ParallelLoad, ClockIn, input logic [11:0] ParallelLoadn, output logic [11:0] Q);
+    flipflop u0(.D((ParallelLoad == 'b0) ? 'b0 : ParallelLoadn[0]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[0]));
+    flipflop u1(.D((ParallelLoad == 'b0) ? Q[0] : ParallelLoadn[1]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[1]));
+    flipflop u2(.D((ParallelLoad == 'b0) ? Q[1] : ParallelLoadn[2]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[2]));
+    flipflop u3(.D((ParallelLoad == 'b0) ? Q[2] : ParallelLoadn[3]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[3]));
+    flipflop u4(.D((ParallelLoad == 'b0) ? Q[3] : ParallelLoadn[4]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[4]));
+    flipflop u5(.D((ParallelLoad == 'b0) ? Q[4] : ParallelLoadn[5]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[5]));
+    flipflop u6(.D((ParallelLoad == 'b0) ? Q[5] : ParallelLoadn[6]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[6]));
+    flipflop u7(.D((ParallelLoad == 'b0) ? Q[6] : ParallelLoadn[7]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[7]));
+    flipflop u8(.D((ParallelLoad == 'b0) ? Q[7] : ParallelLoadn[8]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[8]));
+    flipflop u9(.D((ParallelLoad == 'b0) ? Q[8] : ParallelLoadn[9]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[9]));
+    flipflop u10(.D((ParallelLoad == 'b0) ? Q[9] : ParallelLoadn[10]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[10]));
+    flipflop u11(.D((ParallelLoad == 'b0) ? Q[10] : ParallelLoadn[11]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[11]));
+
+endmodule
+
+module flipflop(input logic D, ClockIn, Reset, Enable, output logic Q);
+    always_ff @(posedge ClockIn)
+    begin
+        if(Reset)
+            Q <= 1'b0;
+        else if(Enable)
+            Q <= D;
+    end
+endmodule 
+
+
 module mux12bit8to1(input logic [2:0] sel, output logic [11:0] out);
     always_comb
     begin
@@ -137,3 +144,41 @@ module subcct(input logic left, right, LoadLeft, D, loadn, clock, reset, output 
             Q <= c2;
     end
 endmodule
+
+
+
+
+// module counter (input logic Clock, input logic Enable, input logic Reset, output logic [7:0] CounterValue);
+//     logic [6:0] c;
+//     assign c[0] = CounterValue[0] & Enable;
+//     genvar i;
+//     generate
+//         for(i = 1; i < 7; i++) begin
+//             assign c[i] = CounterValue[i] & c[i - 1];
+//         end
+//     endgenerate
+
+//     T_FlipFlop u0(.T(Enable), .clk(Clock), .reset(Reset), .Q(CounterValue[0]));
+//     T_FlipFlop u1(.T(c[0]), .clk(Clock), .reset(Reset), .Q(CounterValue[1]));
+//     T_FlipFlop u2(.T(c[1]), .clk(Clock), .reset(Reset), .Q(CounterValue[2]));
+//     T_FlipFlop u3(.T(c[2]), .clk(Clock), .reset(Reset), .Q(CounterValue[3]));
+//     T_FlipFlop u4(.T(c[3]), .clk(Clock), .reset(Reset), .Q(CounterValue[4]));
+//     T_FlipFlop u5(.T(c[4]), .clk(Clock), .reset(Reset), .Q(CounterValue[5]));
+//     T_FlipFlop u6(.T(c[5]), .clk(Clock), .reset(Reset), .Q(CounterValue[6]));
+//     T_FlipFlop u7(.T(c[6]), .clk(Clock), .reset(Reset), .Q(CounterValue[7]));
+
+
+// endmodule
+
+// module T_FlipFlop(input logic T, input logic clk, input logic reset, output logic Q);
+//     logic c1;
+//     assign c1 = T ^ Q; 
+
+//     always_ff @(posedge clk)
+//     begin
+//         if(reset)
+//             Q <= 1'b0;
+//         else
+//             Q <= c1;
+//     end
+// endmodule
