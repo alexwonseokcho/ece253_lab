@@ -1,33 +1,78 @@
 module part3 #(parameter CLOCK_FREQUENCY=500) (input logic ClockIn, Reset, Start, input logic [2:0] Letter, output logic DotDashOut, NewBitOut);
     logic leftbit;
     logic [11:0] shift_reg_out;
+    logic [7:0] count_value;
+    logic [7:0] count_value_start;
     mux3to12_morse mux(.sel(Letter), .out(letter_morse));
     shift_reg shift(.clock(ClockIn), .reset(Reset), .ParallelLoadn(0), .RotateRight(1'b1), .ASRight(1'b0), .Data_IN(letter_morse), .Q(shift_reg_out), .leftbit(leftbit));
+    counter count_start(.Clock(ClockIn), .Enable(start), .Reset(Reset), .CounterValue(count_value_start));
     
-
-
-
-endmodule
-
-
-module RateDivider #(parameter CLOCK_FREQUENCY = 500) (input logic ClockIn, Reset, output logic Enable);
-
-    logic [$clog2(CLOCK_FREQUENCY * 4 + 1): 0] countStart;
-    logic [$clog2(CLOCK_FREQUENCY * 4 + 1): 0] RateDividerCount;
-
-    countStart = (CLOCK_FREQUENCY / 2) - 1;
-
-    assign Enable = (RateDividerCount == 'b0) ? 'b1 : 'b0;
-
-    always_ff @(posedge ClockIn)
+    counter count(.Clock(ClockIn), .Enable(leftbit), .Reset(Reset), .CounterValue(count_value));
+    always
     begin
-        if (Reset || Enable)
-            RateDividerCount <= countStart;
-        else
-            RateDividerCount <= RateDividerCount - 1;  
+        if (count_value == 8'b00000011)
+            DotDashOut = 1'b0;
+        if (count_value == 8'b00000001)
+            DotDashOut = 1'b1;
+        default: DotDashOut = 1'b0;
     end
+endmodule
+
+module counter (input logic Clock, input logic Enable, input logic Reset, output logic [7:0] CounterValue);
+    logic [6:0] c;
+    assign c[0] = CounterValue[0] & Enable;
+    genvar i;
+    generate
+        for(i = 1; i < 7; i++) begin
+            assign c[i] = CounterValue[i] & c[i - 1];
+        end
+    endgenerate
+
+    T_FlipFlop u0(.T(Enable), .clk(Clock), .reset(Reset), .Q(CounterValue[0]));
+    T_FlipFlop u1(.T(c[0]), .clk(Clock), .reset(Reset), .Q(CounterValue[1]));
+    T_FlipFlop u2(.T(c[1]), .clk(Clock), .reset(Reset), .Q(CounterValue[2]));
+    T_FlipFlop u3(.T(c[2]), .clk(Clock), .reset(Reset), .Q(CounterValue[3]));
+    T_FlipFlop u4(.T(c[3]), .clk(Clock), .reset(Reset), .Q(CounterValue[4]));
+    T_FlipFlop u5(.T(c[4]), .clk(Clock), .reset(Reset), .Q(CounterValue[5]));
+    T_FlipFlop u6(.T(c[5]), .clk(Clock), .reset(Reset), .Q(CounterValue[6]));
+    T_FlipFlop u7(.T(c[6]), .clk(Clock), .reset(Reset), .Q(CounterValue[7]));
+
 
 endmodule
+
+module T_FlipFlop(input logic T, input logic clk, input logic reset, output logic Q);
+    logic c1;
+    assign c1 = T ^ Q; 
+
+    always_ff @(posedge clk)
+    begin
+        if(reset)
+            Q <= 1'b0;
+        else
+            Q <= c1;
+    end
+endmodule
+
+
+
+// module RateDivider #(parameter CLOCK_FREQUENCY = 500) (input logic ClockIn, Reset, output logic Enable);
+
+//     logic [$clog2(CLOCK_FREQUENCY * 4 + 1): 0] countStart;
+//     logic [$clog2(CLOCK_FREQUENCY * 4 + 1): 0] RateDividerCount;
+
+//     countStart = (CLOCK_FREQUENCY / 2) - 1;
+
+//     assign Enable = (RateDividerCount == 'b0) ? 'b1 : 'b0;
+
+//     always_ff @(posedge ClockIn)
+//     begin
+//         if (Reset || Enable)
+//             RateDividerCount <= countStart;
+//         else
+//             RateDividerCount <= RateDividerCount - 1;  
+//     end
+
+// endmodule
 
 module mux3to12_morse(input [2:0] sel, output [11:0] out);
     always_comb
