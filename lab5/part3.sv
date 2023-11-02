@@ -1,21 +1,19 @@
 module part3 #(parameter CLOCK_FREQUENCY=500) (input logic ClockIn, Reset, Start, input logic [2:0] Letter, output logic DotDashOut, NewBitOut);
-    logic leftbit;
-    logic [11:0] shift_reg_out;
-    logic [7:0] count_value;
-    logic [7:0] count_value_start;
-    mux3to12_morse mux(.sel(Letter), .out(letter_morse));
-    shift_reg shift(.clock(ClockIn), .reset(Reset), .ParallelLoadn(0), .RotateRight(1'b1), .ASRight(1'b0), .Data_IN(letter_morse), .Q(shift_reg_out), .leftbit(leftbit));
-    counter count_start(.Clock(ClockIn), .Enable(start), .Reset(Reset), .CounterValue(count_value_start));
+    // logic leftbit;
+    // logic [11:0] shift_reg_out;
+    // logic [7:0] count_value;
+    // logic [7:0] count_value_start;
+    // mux3to12_morse mux(.sel(Letter), .out(letter_morse));
+    // shift_reg shift(.clock(ClockIn), .reset(Reset), .ParallelLoadn(0), .RotateRight(1'b1), .ASRight(1'b0), .Data_IN(letter_morse), .Q(shift_reg_out), .leftbit(leftbit));
+    // counter count_start(.Clock(ClockIn), .Enable(start), .Reset(Reset), .CounterValue(count_value_start));
     
-    counter count(.Clock(ClockIn), .Enable(leftbit), .Reset(Reset), .CounterValue(count_value));
-    always
-    begin
-        if (count_value == 8'b00000011)
-            DotDashOut = 1'b0;
-        if (count_value == 8'b00000001)
-            DotDashOut = 1'b1;
-        default: DotDashOut = 1'b0;
-    end
+    // counter count(.Clock(ClockIn), .Enable(shift_reg_out[11]), .Reset(Reset), .CounterValue(count_value));
+
+    mux3to12_morse mux(.sel(Letter), .out(letter_morse));
+    RateDivider rd(.ClockIn(0.5), .Reset(Reset), .Enable(start));
+    counter(.Clock(start), .Enable(rd.Enable), .Reset(Reset), .CounterValue(count_value));
+    // shift_reg shift(.clock(ClockIn), .reset(Reset), .ParallelLoadn(0), .RotateRight(1'b1), .ASRight(1'b0), .Data_IN(letter_morse), .Q(shift_reg_out), .leftbit(leftbit));
+
 endmodule
 
 module counter (input logic Clock, input logic Enable, input logic Reset, output logic [7:0] CounterValue);
@@ -55,24 +53,24 @@ endmodule
 
 
 
-// module RateDivider #(parameter CLOCK_FREQUENCY = 500) (input logic ClockIn, Reset, output logic Enable);
+module RateDivider #(parameter CLOCK_FREQUENCY = 500) (input logic ClockIn, Reset, output logic Enable);
 
-//     logic [$clog2(CLOCK_FREQUENCY * 4 + 1): 0] countStart;
-//     logic [$clog2(CLOCK_FREQUENCY * 4 + 1): 0] RateDividerCount;
+    logic [$clog2(CLOCK_FREQUENCY * 4 + 1): 0] countStart;
+    logic [$clog2(CLOCK_FREQUENCY * 4 + 1): 0] RateDividerCount;
 
-//     countStart = (CLOCK_FREQUENCY / 2) - 1;
+    countStart = (CLOCK_FREQUENCY / 2) - 1;
 
-//     assign Enable = (RateDividerCount == 'b0) ? 'b1 : 'b0;
+    assign Enable = (RateDividerCount == 'b0) ? 'b1 : 'b0;
 
-//     always_ff @(posedge ClockIn)
-//     begin
-//         if (Reset || Enable)
-//             RateDividerCount <= countStart;
-//         else
-//             RateDividerCount <= RateDividerCount - 1;  
-//     end
+    always_ff @(posedge ClockIn)
+    begin
+        if (Reset || Enable)
+            RateDividerCount <= countStart;
+        else
+            RateDividerCount <= RateDividerCount - 1;  
+    end
 
-// endmodule
+endmodule
 
 module mux3to12_morse(input [2:0] sel, output [11:0] out);
     always_comb
