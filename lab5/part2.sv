@@ -43,9 +43,9 @@ module DisplayCounter (input logic Clock, Reset, EnableDC, output logic [3:0] Co
     always_ff @(posedge Clock)
     begin 
         if(Reset)
-            CounterValue = 'b0;
+            CounterValue <= 'b0;
         else if (EnableDC)
-            CounterValue = CounterValue + 1;
+            CounterValue <= CounterValue + 1;
     end
 
 endmodule

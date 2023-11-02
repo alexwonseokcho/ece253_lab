@@ -18,7 +18,7 @@ add wave {/*}
 #module part3 #(parameter CLOCK_FREQUENCY=500) (input logic ClockIn, Reset, Start, input logic [2:0] Letter, output logic DotDashOut, NewBitOut);
 
 
-force {ClockIn} 0, 1 {1 ms} -r {2 ms}
+force {ClockIn} 0, 1 {1 ms} -r {2 ms} 
 
 force {Reset} 1
 run 3 ms
