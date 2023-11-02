@@ -48,7 +48,7 @@ module RateDivider #(parameter CLOCK_FREQUENCY = 500) (input logic ClockIn, Rese
         else
             RateDividerCount <= RateDividerCount - 1;  
     end
-
+ 
 endmodule
 
 module counter(input logic ClockIn, Enable, Reset, Start, output logic [3:0] CounterOut, output logic NewBitOut);
@@ -58,17 +58,17 @@ module counter(input logic ClockIn, Enable, Reset, Start, output logic [3:0] Cou
         if (Reset)
             CounterOut <= 'b0;
         else if(Start)
-            CounterOut <= 12;
+            CounterOut <= 11; //was 12
         else if(CounterOut != 'b0 && Enable)
             CounterOut <= CounterOut - 1;  
     end
 
     // assign CounterOut = CounterCount;
-    assign NewBitOut = ~(CounterOut == 'b0) & Enable & ~(CounterOut == 12);
+    assign NewBitOut = ~(CounterOut == 'b0) & Enable;// & ~(CounterOut == 12);
 endmodule 
 
 module shiftregister12bit(input logic Reset, Shift, ParallelLoad, ClockIn, input logic [11:0] ParallelLoadn, output logic [11:0] Q);
-    flipflop u0(.D((ParallelLoad == 'b0) ? 'b0 : ParallelLoadn[0]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[0]));
+    flipflop u0(.D((ParallelLoad == 'b0) ? 1'b0 : ParallelLoadn[0]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[0]));
     flipflop u1(.D((ParallelLoad == 'b0) ? Q[0] : ParallelLoadn[1]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[1]));
     flipflop u2(.D((ParallelLoad == 'b0) ? Q[1] : ParallelLoadn[2]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[2]));
     flipflop u3(.D((ParallelLoad == 'b0) ? Q[2] : ParallelLoadn[3]), .ClockIn(ClockIn), .Reset(Reset), .Enable(Shift | ParallelLoad), .Q(Q[3]));
