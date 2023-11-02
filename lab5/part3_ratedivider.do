@@ -24,4 +24,4 @@ force {ClockIn} 0, 1 {1 ms} -r {2 ms}
 force {Reset} 1
 run 3 ms
 force {Reset} 0
-run 5000 ms
+run 50000 ms
