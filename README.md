@@ -19,3 +19,10 @@
 - Gated D-latch with 7400 series chips 
 - Sequential ALU in SV
 - Rotating register with arithmetic shift in SV
+
+### Lab 5
+- 8 bit counter using T flip flops in SV
+- Counter that continuously outputs hexadecimals from 0 to F using a rate divider and counter
+- Morse code encoder with rate dividers, counters, and parallel load shift registers
+
+### Lab 6
