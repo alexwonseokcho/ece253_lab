@@ -26,3 +26,4 @@
 - Morse code encoder with rate dividers, counters, and parallel load shift registers
 
 ### Lab 6
+- Simple FSM that detects 1111 or 1101
