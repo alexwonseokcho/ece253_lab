@@ -48,3 +48,16 @@ force {Start} 0
 
 
 run 10000 ms
+
+
+force {Letter} 000
+force {ClockIn} 0, 1 {1 ms} -r {2 ms}
+force {Reset} 1
+run 2 ms
+force {Reset} 0
+run 50ms
+
+force {Start} 1
+run 2 ms
+
+
