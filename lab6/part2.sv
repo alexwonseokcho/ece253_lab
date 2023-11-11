@@ -12,7 +12,7 @@ module part2(
     logic ld_alu_out;
     logic [1:0] alu_select_a, alu_select_b;
     logic alu_op;
-    logic [7:0] a, b, c, x; // ONLY FOR TESTING
+    // logic [7:0] a, b, c, x; // ONLY FOR TESTING
 
     control C0(
         .clk(Clock),
@@ -52,12 +52,12 @@ module part2(
         .alu_op(alu_op),
 
         .data_in(DataIn),
-        .data_result(DataResult),
+        .data_result(DataResult)
         // ONLY FOR TESTING
-        .a(a),
-        .b(b),
-        .c(c),
-        .x(x)
+        // .a(a),
+        // .b(b),
+        // .c(c),
+        // .x(x)
     );
 
  endmodule
@@ -206,12 +206,12 @@ module datapath(
     input logic ld_r,
     input logic alu_op,
     input logic [1:0] alu_select_a, alu_select_b,
-    output logic [7:0] data_result,
-    output logic [7:0] a, b, c, x // ONLY FOR TESTING
+    output logic [7:0] data_result
+    // output logic [7:0] a, b, c, x // ONLY FOR TESTING
     );
 
     // input logic logicisters
-    // logic [7:0] a, b, c, x; // ONLY FOR TESTING
+    logic [7:0] a, b, c, x; // ONLY FOR TESTING
 
     // output logic of the alu
     logic [7:0] alu_out;

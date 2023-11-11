@@ -15,15 +15,16 @@
 - simple Arithmetic Logic Unit in SV
 - Passing parameter for flexible input width in the ALU in SV
 
-### Lab 4
+#### Lab 4
 - Gated D-latch with 7400 series chips 
 - Sequential ALU in SV
 - Rotating register with arithmetic shift in SV
 
-### Lab 5
+#### Lab 5
 - 8 bit counter using T flip flops in SV
 - Counter that continuously outputs hexadecimals from 0 to F using a rate divider and counter
 - Morse code encoder with rate dividers, counters, and parallel load shift registers
 
-### Lab 6
+#### Lab 6
 - Simple FSM that detects 1111 or 1101
+- Make FSM for control path and and ALU for data path for Ax^2 + Bx + C 
