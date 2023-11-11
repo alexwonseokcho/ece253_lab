@@ -10,8 +10,9 @@ module part2(
     // lots of wires to connect our datapath and control
     logic ld_a, ld_b, ld_c, ld_x, ld_r;
     logic ld_alu_out;
-    logic alu_select_a, alu_select_b;
+    logic [1:0] alu_select_a, alu_select_b;
     logic alu_op;
+    logic [7:0] a, b, c, x; // ONLY FOR TESTING
 
     control C0(
         .clk(Clock),
@@ -51,7 +52,12 @@ module part2(
         .alu_op(alu_op),
 
         .data_in(DataIn),
-        .data_result(DataResult)
+        .data_result(DataResult),
+        // ONLY FOR TESTING
+        .a(a),
+        .b(b),
+        .c(c),
+        .x(x)
     );
 
  endmodule
@@ -64,12 +70,12 @@ module control(
 
     output logic ld_a, ld_b, ld_c, ld_x, ld_r,
     output logic ld_alu_out,
-    output logic alu_select_a, alu_select_b,
+    output logic [1:0] alu_select_a, alu_select_b,
     output logic alu_op,
     output logic result_valid
     );
 
-    typedef enum logic [2:0]  { S_LOAD_A_RST    = 'd0,
+    typedef enum logic [3:0]  { S_LOAD_A_RST    = 'd0,
                                 S_LOAD_A        = 'd1,
                                 S_LOAD_A_WAIT   = 'd2,
                                 S_LOAD_B        = 'd3,
@@ -148,24 +154,28 @@ module control(
                 alu_select_a = 2'b00; // Select register A
                 alu_select_b = 2'b11; // Select register x
                 alu_op = 1'b1; // Do Multiply operation
+                ld_alu_out = 1'b1; // Load the output of the ALU back into the register
             end
             S_CYCLE_1: begin // Do Ax <- Ax * x
                 ld_a = 1'b1; // load register A
                 alu_select_a = 2'b00; // Select register A
                 alu_select_b = 2'b11; // Select register x
                 alu_op = 1'b1; // Do Multiply operation
+                ld_alu_out = 1'b1; // Load the output of the ALU back into the register
             end
             S_CYCLE_2: begin // Do B <- B * x
                 ld_b = 1'b1; // load register B
                 alu_select_a = 2'b01; // Select register B
                 alu_select_b = 2'b11; // Select register x
                 alu_op = 1'b1; // Do Multiply operation
+                ld_alu_out = 1'b1; // Load the output of the ALU back into the register
             end
             S_CYCLE_3: begin // Do A <- Ax^2 + Bx
                 ld_a = 1'b1; // load register A
                 alu_select_a = 2'b00; // Select register A
                 alu_select_b = 2'b01; // Select register B
                 alu_op = 1'b0; // Do Add operation
+                ld_alu_out = 1'b1; // Load the output of the ALU back into the register
             end
             S_CYCLE_4: begin // Do R <- Ax^2 + Bx + C
                 ld_r = 1'b1; // load register A
@@ -195,12 +205,13 @@ module datapath(
     input logic ld_a, ld_b, ld_c, ld_x,
     input logic ld_r,
     input logic alu_op,
-    input logic alu_select_a, alu_select_b,
-    output logic [7:0] data_result
+    input logic [1:0] alu_select_a, alu_select_b,
+    output logic [7:0] data_result,
+    output logic [7:0] a, b, c, x // ONLY FOR TESTING
     );
 
     // input logic logicisters
-    logic [7:0] a, b, c, x;
+    // logic [7:0] a, b, c, x; // ONLY FOR TESTING
 
     // output logic of the alu
     logic [7:0] alu_out;
@@ -237,18 +248,18 @@ module datapath(
     // The ALU input logic multiplexers
     always_comb begin
         case (alu_select_a)
-            2'd00: alu_a = a;
-            2'd01: alu_a = b;
-            2'd10: alu_a = c;
-            2'd11: alu_a = x;
+            2'b00: alu_a = a;
+            2'b01: alu_a = b;
+            2'b10: alu_a = c;
+            2'b11: alu_a = x;
             default: alu_a = 8'b0;
         endcase
 
         case (alu_select_b)
-            2'd00: alu_b = a;
-            2'd01: alu_b = b;
-            2'd10: alu_b = c;
-            2'd11: alu_b = x;
+            2'b00: alu_b = a;
+            2'b01: alu_b = b;
+            2'b10: alu_b = c;
+            2'b11: alu_b = x;
             default: alu_b = 8'b0;
         endcase
     end
