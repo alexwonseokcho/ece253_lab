@@ -1,5 +1,4 @@
-
-module part2(
+module part2_2(
     input logic Clock,
     input logic Reset,
     input logic Go,
