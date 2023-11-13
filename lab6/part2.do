@@ -50,3 +50,32 @@ force {DataIn} 00000010
 run 20ns
 force {Go} 0
 run 120ns
+
+
+# 2*(2^2) + 10*(2^1) + 6 = 34
+force {Go} 1
+force {DataIn} 00000010
+run 20ns
+force {Go} 0
+force {DataIn} 00000010
+run 20ns
+force {Go} 1
+force {DataIn} 00001010
+run 20ns
+force {Go} 0
+force {DataIn} 00001010
+run 20ns
+force {Go} 1
+force {DataIn} 00000110
+run 20ns
+force {Go} 0
+force {DataIn} 00000110
+run 20ns
+force {Go} 1
+force {DataIn} 00000010
+run 20ns
+force {Go} 0
+force {DataIn} 00000010
+run 20ns
+force {Go} 0
+run 120ns
