@@ -26,6 +26,6 @@
 - Morse code encoder with rate dividers, counters, and parallel load shift registers
 
 #### Lab 6
-- Simple FSM that detects 1111 or 1101
-- Make FSM for control path and and ALU for data path for Ax^2 + Bx + C 
+- Simple FSM that detects sequences of 1111 or 1101
+- Make FSM for control path and and ALU for data path to perform Ax^2 + Bx + C 
 - Design a control and datapath to implement division in hardware
