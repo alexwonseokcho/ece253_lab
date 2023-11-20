@@ -8,18 +8,18 @@ _start:
 	
 #Code here
 
-la s1, LIST #s1 = address of LIST
+#la s1, LIST #s1 = address of LIST
 addi s3, zero, -1 #for comparison
 
-LOOP1: lw s2, 0(s1) #s2 = mem[List[i]] = 1
+LOOP1: lw s4, 0(s2) #s2 = mem[List[i]] = 1
 
 #if loaded thing is -1, jump to end
 
-beq s2, s3, END 
+beq s4, s3, END 
 
 addi s11, s11, 1
-add s10, s10, s2
-addi s1, s1, 4
+add s10, s10, s4
+addi s2, s2, 4
 j LOOP1
 
 
