@@ -1,6 +1,7 @@
 # ece253_lab
-### Lab material for ECE253 Digital and Computer Systems utilizing System Verilog and DE1-SoC FPGA
+## Lab material for ECE253 Digital and Computer Systems utilizing System Verilog on DE1-SoC FPGA and RISC-V Assembly
 
+### System Verilog
 #### Lab 1
 - Implementing circuits using 7400-series gates given a specific function
 - Truth tables and simplificaiton of boolean expressions
@@ -29,3 +30,9 @@
 - Simple FSM that detects sequences of 1111 or 1101
 - Make FSM for control path and and ALU for data path to perform Ax^2 + Bx + C 
 - Design a control and datapath to implement division in hardware
+
+### RISC-V Assembly
+
+#### Lab 7
+- Iterating through a list of values and accumulating using branch
+- Calculating the longest consecutive streak of 1's with shift and AND operations
