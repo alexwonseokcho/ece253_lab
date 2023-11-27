@@ -28,18 +28,29 @@ LOOP_MAIN:
 	
 
 ONES: 
+	addi sp, sp, -4
+	sw ra, 0(sp)
 	#the element will be loaded through through a1
 	#lw a1, 0(a0) # value of that element is in a1 now
 	addi a0, zero, 0 #register s4 holds result
 	
 LOOP_ONES:
 	beqz a1, END_ONES #Loop until data contains no more 1's (Branch if s3 is equal to 0
+	
+	#save the registers to be used to stack
+	
 	srli a2, a1, 1 #SHIFT RIGHT logical 
 	and a1, a1, a2 #bitwise and operation
 	addi a0, a0, 1 #increment s4 (count)
+	
+	#restore used registers from stack
+	
 	b LOOP_ONES
 
-END_ONES: jr ra
+END_ONES: 
+lw ra, 0(sp)
+addi sp, sp, 4
+jr ra
 
 END: ebreak
 	

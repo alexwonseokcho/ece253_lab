@@ -20,8 +20,9 @@ LOOP:
 SUBLOOP:
 	beqz s2, DONE_SUB_LOOP
 	
-	lw a0, 0(s0) #value of the first element (change to the address of it instead)
+	add a0, zero, s0 #address of the left element
 	
+	jal SWAP
 	
 	addi s0, s0, 4
 	addi s2, s2, -1
@@ -35,16 +36,36 @@ DONE_SUB_LOOP:
 	j LOOP
 
 SWAP: 
-
-
+	addi sp, sp, -4
+	sw ra, 0(sp)
+	
+	# a0 houses the address of the element and 4(a0) is the addr of next element
+	add a3, a0, zero
+	lw a5, 0(a3)
+	lw a6, 4(a3) 
+	
+	addi a0, zero, 0
+	blt a5, a6, SKIP_SWAP
+	
+	#Swapping code
+	addi a0, zero, 1
+	
+	sw a6, 0(a3)
+	sw a5, 4(a3)
+	
+	SKIP_SWAP: 
+	lw ra, 0(sp)
+	addi sp, sp, 4
 	jr ra 
 
+	
 
 END:
 	ebreak
 	
 .global LIST
 .data
-LIST:
-.word 4, 1, 2, 3, 4
+LIST: 10, 1400, 45, 23, 5, 3, 8, 17, 4, 20, 33
+.word
+# 4, 4, 3, 2, 1
 #1400, 45, 23, 5, 3, 8, 17, 4, 20, 33
