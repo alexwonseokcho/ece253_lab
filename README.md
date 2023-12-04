@@ -33,6 +33,14 @@
 
 ### RISC-V Assembly
 
-#### Lab 7
+#### Lab 7 - Introduction to Assembly
 - Iterating through a list of values and accumulating using branch
 - Calculating the longest consecutive streak of 1's with shift and AND operations
+
+#### Lab 8 - Subroutines
+- Using subroutines to calculate the longest consecutive streak of 1's in a list of 32bit values
+- Implementation of bubble sort
+
+#### Lab 9 - I/O Devices and Polling/Interrupts
+- Polling keypresses and outputing the ASCII characters onto a display
+- Timer interrupt to print a different string of characters every 5 seconds. 
