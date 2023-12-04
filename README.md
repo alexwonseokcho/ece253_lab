@@ -44,3 +44,4 @@
 #### Lab 9 - I/O Devices and Polling/Interrupts
 - Polling keypresses and outputing the ASCII characters onto a display
 - Timer interrupt to print a different string of characters every 5 seconds. 
+(Implementation is currently not register-efficient due to the tight time constraints of the lab)
