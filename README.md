@@ -1,6 +1,8 @@
 # ece253_lab
 ## Lab material for ECE253 Digital and Computer Systems utilizing System Verilog on DE1-SoC FPGA and RISC-V Assembly
 
+by Alex Cho EngSci 2T6 and Garvish Bhutani EngSci 2T6
+
 ### System Verilog
 #### Lab 1
 - Implementing circuits using 7400-series gates given a specific function
